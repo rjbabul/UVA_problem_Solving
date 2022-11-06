@@ -10,7 +10,6 @@ int check(int a , int b)
         if(flag[a%10]>1) return 0;
         a/=10;
     }
-
      while(b){
         flag[b%10]++;
         if(flag[b%10]>1) return 0;
