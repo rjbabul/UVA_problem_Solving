@@ -8,16 +8,7 @@ struct
     int cnt ;
 }st[10];
 
-int length(int x)
-{
-    int cnt=0;
-    while(x)
-    {
-        cnt++;
-        x/=10;
-    }
-    return cnt;
-}
+
 int check(int x, int n)
 {
     int digit= n/2;
@@ -54,6 +45,7 @@ int main()
 {
     int temp;
     st[2].cnt = st[4].cnt=st[6].cnt=st[8].cnt=0;
+
     for(int i=0;i<=mx;i++)
     {
         temp= i*i;
