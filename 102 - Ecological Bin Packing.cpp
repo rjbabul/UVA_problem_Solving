@@ -12,6 +12,7 @@ void pre_calculation(string str,vector<string> & vt)
 }
 int main()
 {
+
     string str= "BCG";
     vector<string > vt;
     pre_calculation(str, vt);
