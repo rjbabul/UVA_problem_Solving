@@ -59,8 +59,6 @@ int main()
         }
         else
             cout<< cc << " step(s) to exit\n" ;
-
-
     }
     return 0;
 }
