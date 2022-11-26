@@ -15,6 +15,7 @@ struct Node
     int w;
     struct Node* left;
     struct Node*right;
+
     Edge *ed=NULL;
 };
 
@@ -22,66 +23,70 @@ Edge *push_edge(Edge *head, int r, int c)
 {
     Edge *newnode =NULL;
     newnode= (struct Edge*)malloc(sizeof(struct Edge));
-
+    newnode->r= r;
+    newnode->c= c;
     newnode->child=NULL;
 
-
     if(head==NULL) return newnode;
+
     Edge *temp= head;
     while(temp->child) temp= temp->child;
-
     temp->child= newnode;
 
     return head;
-
 }
 
-Node* get(Node* head, int data)
-{
-     if(head->left!=NULL  && head->w>data)
-    {
+/// Search Tree with minimum value
 
-        return get(head->left, data);
-    }
-    else if(head->right!=NULL  && head->w<data)
+Node* get(Node* head, int w)
+{
+     if(head->left!=NULL  && head->w>w)
     {
-        return get(head->right, data);
+        return get(head->left, w);
+    }
+    else if(head->right!=NULL  && head->w<w)
+    {
+        return get(head->right, w);
     }
     return head;
 }
-Node* push(Node *head , int w, int r, int c)
+
+/// Add Node on Tree
+Node *push(Node *head , int w, int r, int c)
 {
-    Node*newnode =NULL;
-    newnode= (struct Node*) malloc(sizeof(struct Node));
+    Node *newnode = NULL;
+    newnode= (struct Node*)malloc(sizeof(struct Node));
     newnode->w= w;
-    newnode->left= NULL;
+    newnode->left=NULL;
     newnode->right=NULL;
-    newnode->ed = NULL;
 
-    if(head ==  NULL) return newnode;
-    Node *temp = head;
+    newnode->ed= NULL;
+    newnode->ed= push_edge(newnode->ed, r, c);
 
-    temp = get(head, w);
-
-    if(temp->w>w) temp->left=newnode;
-    else if(temp->w<w) temp->right=newnode;
-    else{
-        temp->ed = push_edge(temp->ed, r,c);
+    if(head==NULL)
+    {
+        return newnode;
     }
+     Node* temp = get(head,w);
 
+    if(temp->w==w)
+    {
+     temp->ed = push_edge(temp->ed, r,c);
+    }
+    else if(temp->w<w) temp->right= newnode;
+    else temp->left= newnode;
     return head;
 }
 
-void diastra(int r , int c, int n,int m)
+void Dijkstra(int r , int c, int n,int m)
 {
     int rw[]={1,-1,0,0};
     int cw[]={0,0,1,-1};
 
     Node *qu=NULL;
-    qu= (struct Node*)malloc(sizeof(struct Node));
-    if(r==n-1 && c==m-1) mn=max(mn, a[r][c]);
+
     visit[0][0]=0;
-    qu = push(qu,0, r, c);
+    qu = push(qu,0, 0, 0);
 
     while(qu)
     {
@@ -89,7 +94,8 @@ void diastra(int r , int c, int n,int m)
         int w;
         Node *temp= qu;
         Node *cur= qu;
-        Edge *edge =NULL;
+        Edge *edge;
+
           if(qu->left==NULL)
         {
             edge= qu->ed;
@@ -102,37 +108,34 @@ void diastra(int r , int c, int n,int m)
             while(temp->left) temp = temp->left;
             edge= temp->ed;
             w= temp->w;
-            if(temp->w!=cur->w) cur->left= temp->right;
+            cur->left= temp->right;
         }
+
         while(edge)
         {
             r= edge->r;
             c= edge->c;
-
             for(int i=0;i<4;i++)
             {
-
                 if((rw[i]+r)>=0 && (rw[i]+r)<n && (c+cw[i])>=0 && (c+cw[i])<m)
-                {  cout<<r+rw[i]<<"  "<<(c+cw[i])<<"  "<<a[r+rw[i]][cw[i]+c]<<" "<<visit[r+rw[i]][cw[i]+c]<<endl;
-
+                {
                     if(a[r+rw[i]][cw[i]+c]+w<visit[r+rw[i]][c+cw[i]])
                     {
-
-                         visit[r+rw[i]][c+cw[i]]=a[r][c]+w;
-                         qu= push(qu,visit[r+rw[i]][c+cw[i]], r+rw[i], c+cw[i]);cout<<"a"<<endl;
+                         visit[r+rw[i]][c+cw[i]]=a[r+rw[i]][c+cw[i]]+w;
+                         qu= push(qu,visit[r+rw[i]][c+cw[i]], r+rw[i], c+cw[i]);
                     }
                 }
             }
             edge= edge->child;
         }
-
-
     }
-
 }
 int main()
 {
-    freopen("input.txt", "r", stdin);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    freopen("input.txt","r", stdin);
+
     int n, m, t;
     cin>>t;
     while(t-- && cin>>n>>m)
@@ -146,12 +149,9 @@ int main()
             }
 
         }
-         mn=INT_MAX;
-
-        diastra(0,0,n,m);
-        cout<<"b"<<endl;
-        cout<<mn<<endl;
-
+        mn=INT_MAX;
+        Dijkstra(0,0,n,m);
+        cout<<visit[n-1][m-1]<<endl;
     }
     return 0;
 }
