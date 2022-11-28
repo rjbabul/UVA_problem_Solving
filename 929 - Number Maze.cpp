@@ -29,9 +29,8 @@ Edge *push_edge(Edge *head, int r, int c)
 
     if(head==NULL) return newnode;
 
-    Edge *temp= head;
-    while(temp->child) temp= temp->child;
-    temp->child= newnode;
+    newnode->child = head;
+    head= newnode;
 
     return head;
 }
@@ -80,17 +79,16 @@ Node *push(Node *head , int w, int r, int c)
 
 void Dijkstra(int r , int c, int n,int m)
 {
-    int rw[]={1,-1,0,0};
-    int cw[]={0,0,1,-1};
+    int rw[]={-1, 0, 1, 0};
+    int cw[]={0, 1, 0, -1};
 
     Node *qu=NULL;
 
-    visit[0][0]=0;
-    qu = push(qu,0, 0, 0);
+    visit[0][0]=a[0][0];
+    qu = push(qu,a[0][0], 0, 0);
 
     while(qu)
     {
-
         int w;
         Node *temp= qu;
         Node *cur= qu;
@@ -110,19 +108,21 @@ void Dijkstra(int r , int c, int n,int m)
             w= temp->w;
             cur->left= temp->right;
         }
-
         while(edge)
         {
             r= edge->r;
             c= edge->c;
             for(int i=0;i<4;i++)
             {
-                if((rw[i]+r)>=0 && (rw[i]+r)<n && (c+cw[i])>=0 && (c+cw[i])<m)
+                int rr= r+rw[i];
+                int cc= c+cw[i];
+
+                if(rr>=0 && rr<n && cc>=0 && cc<m)
                 {
-                    if(a[r+rw[i]][cw[i]+c]+w<visit[r+rw[i]][c+cw[i]])
+                    if(a[rr][cc]+w<visit[rr][cc])
                     {
-                         visit[r+rw[i]][c+cw[i]]=a[r+rw[i]][c+cw[i]]+w;
-                         qu= push(qu,visit[r+rw[i]][c+cw[i]], r+rw[i], c+cw[i]);
+                         visit[rr][cc]=a[rr][cc]+w;
+                         qu= push(qu,visit[rr][cc], rr, cc);
                     }
                 }
             }
@@ -134,8 +134,7 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    freopen("input.txt","r", stdin);
-
+   freopen("input.txt","r", stdin);
     int n, m, t;
     cin>>t;
     while(t-- && cin>>n>>m)
@@ -147,9 +146,7 @@ int main()
                   visit[i][j]=INT_MAX;
                   cin>>a[i][j];
             }
-
         }
-        mn=INT_MAX;
         Dijkstra(0,0,n,m);
         cout<<visit[n-1][m-1]<<endl;
     }
