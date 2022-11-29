@@ -10,7 +10,7 @@ struct Node
 bool bellmanford(Node node[], int s,int n,int m)
 {
 
-    int dis[100005]={100000009};
+    long long int dis[100005]={100000009};
     dis[s]=0;
     for(int i=0;i<n;i++)
     {
