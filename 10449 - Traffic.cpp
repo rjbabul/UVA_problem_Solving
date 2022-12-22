@@ -15,11 +15,10 @@ long long int dis[1005];
 
     for(int i=1;i<=n;i++) dis[i]=INT_MAX;
     dis[s]=0;
-    for(int i=1;i<n;i++)
+    for(int i=1;i<=n;i++)
     {
         for(int j=1;j<=m;j++)
         {
-
             if(dis[node[j].u]!=INT_MAX && dis[node[j].v]> dis[node[j].u]+node[j].w)
                 dis[node[j].v]= dis[node[j].u] + node[j].w;
         }
